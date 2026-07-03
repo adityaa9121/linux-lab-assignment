@@ -1,1 +1,68 @@
+$ mkdir -p ~/lab-assignment/Question5
+$ cd ~/lab-assignment/Question5
 
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+none            3.8G     0  3.8G   0% /usr/lib/modules/6.18.33.2-microsoft-standard-WSL2
+none            3.8G  4.0K  3.8G   1% /mnt/wsl
+drivers         476G  130G  347G  28% /usr/lib/wsl/drivers
+/dev/sdd       1007G  1.3G  955G   1% /
+none            3.8G   60K  3.8G   1% /mnt/wslg
+none            3.8G     0  3.8G   0% /usr/lib/wsl/lib
+rootfs          3.7G  2.8M  3.7G   1% /init
+none            3.8G  536K  3.8G   1% /run
+none            3.8G     0  3.8G   0% /run/lock
+none            3.8G     0  3.8G   0% /run/shm
+none            3.8G  104K  3.8G   1% /mnt/wslg/versions.txt
+none            3.8G  104K  3.8G   1% /mnt/wslg/doc
+C:\             476G  130G  347G  28% /mnt/c
+none            1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs           3.8G     0  3.8G   0% /tmp
+none            1.0M     0  1.0M   0% /run/credentials/systemd-resolved.service
+none            1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs           759M   12K  759M   1% /run/user/1000
+
+$ df -i
+Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+none            971220      5  971215    1% /usr/lib/modules/6.18.33.2-microsoft-standard-WSL2
+none            971220      2  971218    1% /mnt/wsl
+drivers            999 -999001 1000000    - /usr/lib/wsl/drivers
+/dev/sdd       67108864  45213 67063651    1% /
+none            971220     23  971197    1% /mnt/wslg
+none            971220      5  971215    1% /usr/lib/wsl/lib
+rootfs          969780     12  969768    1% /init
+none            971220    553  970667    1% /run
+none            971220      2  971218    1% /run/lock
+none            971220      1  971219    1% /run/shm
+none            971220     58  971162    1% /mnt/wslg/versions.txt
+none            971220     58  971162    1% /mnt/wslg/doc
+C:\                999 -999001 1000000    - /mnt/c
+none              1024      1    1023    1% /run/credentials/systemd-journald.service
+tmpfs           1048576      9 1048567    1% /tmp
+none              1024      1    1023    1% /run/credentials/systemd-resolved.service
+none              1024      1    1023    1% /run/credentials/getty@tty1.service
+tmpfs            194244     44  194200    1% /run/user/1000
+
+$ du -sh ~/lab-assignment/*
+140K    /home/aditya/lab-assignment/Q1
+128K    /home/aditya/lab-assignment/Q2
+160K    /home/aditya/lab-assignment/Q3
+128K    /home/aditya/lab-assignment/Q4
+12K     /home/aditya/lab-assignment/Q5
+8.0K    /home/aditya/lab-assignment/Question1
+28K     /home/aditya/lab-assignment/Question2
+12K     /home/aditya/lab-assignment/Question3
+100K    /home/aditya/lab-assignment/Question4
+8.0K    /home/aditya/lab-assignment/Question5
+
+$ lsblk
+NAME MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda    8:0    0 356.9M  1 disk
+sdb    8:16   0 159.4M  1 disk
+sdc    8:32   0     2G  0 disk [SWAP]
+sdd    8:48   0     1T  0 disk /mnt/wslg/distro
+                                /
+
+$ sudo blkid
+[sudo] password for aditya:
+[output pending - to be added once run]
