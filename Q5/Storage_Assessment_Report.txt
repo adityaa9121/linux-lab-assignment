@@ -1,1 +1,28 @@
+=== 1. Disk Space Usage (df -h) ===
+Key filesystem: /dev/sdd - Size: 1007G, Used: 1.3G, Avail: 955G, Use%: 1%, Mounted on: /
+C:\ (Windows drive via WSL2) - Size: 476G, Used: 130G, Avail: 347G, Use%: 28%, Mounted on: /mnt/c
+Several 'none' and tmpfs entries (3.8G-ish) are WSL2 virtual/overlay filesystems for /mnt/wsl, /run, /tmp, etc - not real separate disks.
+Explanation: df -h shows that this is a WSL2 (Windows Subsystem for Linux) environment. The root filesystem (/) lives on /dev/sdd with plenty of free space (955G available, only 1% used). The Windows C: drive is mounted at /mnt/c and shows 28% usage. Many other entries are virtual filesystems (tmpfs, overlay mounts) used internally by WSL2 and are not physical disks.
 
+=== 2. Inode Usage (df -i) ===
+/dev/sdd - Inodes: 67108864, IUsed: 45213, IFree: 67063651, IUse%: 1%
+Explanation: Inode usage on the root filesystem is extremely low (1%), meaning there is no risk of running out of inodes even though there are many files. Inodes store file metadata (permissions, owner, timestamps, pointers to data blocks) separately from the actual file content.
+
+=== 3. Directory Size Breakdown (du -sh) ===
+Q1: 140K   Q2: 128K   Q3: 160K   Q4: 128K   Q5: 12K
+Question1: 8.0K   Question2: 28K   Question3: 12K   Question4: 100K   Question5: 8.0K
+Explanation: du -sh shows the disk space consumed by each assignment folder. Question4 is the largest (100K) due to command outputs and report files generated during the I/O investigation. All folders remain small (kilobyte range), confirming this is a lightweight lab environment with mostly text-based outputs.
+
+=== 4. Block Devices (lsblk) ===
+sda   356.9M  disk
+sdb   159.4M  disk
+sdc   2G      disk  [SWAP]
+sdd   1T      disk  mounted at /mnt/wslg/distro and /
+Explanation: lsblk lists the virtual block devices provided by WSL2. sdc is used as swap space (2G), while sdd is the main 1TB virtual disk backing the Linux root filesystem. sda and sdb are small system/boot-related virtual disks used internally by WSL2.
+
+=== 5. Filesystem Type Info (blkid) ===
+[Run 'sudo blkid' and enter password when prompted - output pending]
+Explanation: blkid reports the filesystem type (e.g. ext4) and UUID of each partition, which the OS uses to reliably identify and mount the correct disk at boot, even if device names change.
+
+=== 6. Conclusions ===
+Explanation: This assessment shows a WSL2 Linux environment running on top of Windows, with its root filesystem (/dev/sdd) mounted with abundant free space (955G/1007G available) and negligible inode usage. Storage is well distributed with no filesystem nearing capacity. Understanding df, du, lsblk, and blkid together gives a full picture of storage health: overall space usage, per-directory consumption, physical/virtual device layout, and filesystem identification - all essential for system administration and troubleshooting low-disk-space or mount issues.
