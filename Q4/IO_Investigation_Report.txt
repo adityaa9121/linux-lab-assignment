@@ -1,0 +1,55 @@
+=== 1. Open Files (System-wide and Shell-specific) ===
+lsof | head -20 showed system-wide open files, many owned by root (systemd, init, systemd-resolve) which returned 'Permission denied' since we are not root.
+lsof -p $$ showed files open specifically in our shell process (PID 1838), including:
+  - cwd: /home/aditya/lab-assignment/Question4 (current working directory)
+  - txt: /usr/bin/bash (the shell binary itself)
+  - mem: shared libraries like libc.so.6 and locale files loaded into memory
+  - 0u, 1u, 2u: file descriptors for stdin, stdout, and stderr, all pointing to /dev/pts/0 (the terminal)
+  - 7u: /dev/ptmx (pseudo-terminal master device)
+Explanation: This shows that even a simple shell process has many files open at once - its executable, shared libraries, current directory, and the terminal device itself for input/output.
+
+=== 2. File Descriptor Table (/proc/$$/fd) ===
+total 0
+lrwx------ 1 aditya aditya 64 Jul  3 15:26 0 -> /dev/pts/0
+l-wx------ 1 aditya aditya 64 Jul  3 15:26 1 -> /home/aditya/lab-assignment/Question4/IO_Investigation_Report.txt
+lrwx------ 1 aditya aditya 64 Jul  3 15:28 10 -> /dev/pts/0
+lrwx------ 1 aditya aditya 64 Jul  3 15:26 2 -> /dev/pts/0
+lrwx------ 1 aditya aditya 64 Jul  3 15:26 255 -> /dev/pts/0
+lrwx------ 1 aditya aditya 64 Jul  3 15:26 7 -> /dev/ptmx
+Explanation: This confirms visually that file descriptors 0 (stdin), 1 (stdout), and 2 (stderr) are symbolic links to /dev/pts/0, the terminal device. Descriptor 255 is bash's internal fd, also linked to the terminal, and fd 7 links to /dev/ptmx. This proves the Linux principle that 'everything is a file' - even keyboard input and screen output are represented as file descriptors pointing to device files.
+
+=== 3. Output and Error Redirection ===
+Command: echo "This is normal output" > output.txt
+Result: stdout redirected into output.txt, containing: This is normal output
+
+Command: ls nonexistentfile123 2> error.txt
+Result: stderr redirected into error.txt, containing: ls: cannot access 'nonexistentfile123': No such file or directory
+
+Command: echo "Both combined" > combined.txt 2>&1
+Result: combined.txt contains: Both combined
+Explanation: The > operator redirects standard output (fd 1) to a file, while 2> redirects standard error (fd 2) to a file. The 2>&1 syntax redirects stderr to wherever stdout is currently pointing, merging both streams into a single file - useful for logging both normal output and errors together.
+
+=== 4. Resource Limits (ulimit) ===
+real-time non-blocking time  (microseconds, -R) unlimited
+core file size              (blocks, -c) 0
+data seg size               (kbytes, -d) unlimited
+scheduling priority                 (-e) 0
+file size                   (blocks, -f) unlimited
+pending signals                     (-i) 30307
+max locked memory           (kbytes, -l) 65536
+max memory size             (kbytes, -m) unlimited
+open files                          (-n) 10240
+pipe size                (512 bytes, -p) 8
+POSIX message queues         (bytes, -q) 819200
+real-time priority                  (-r) 0
+stack size                  (kbytes, -s) 8192
+cpu time                   (seconds, -t) unlimited
+max user processes                  (-u) 30307
+virtual memory              (kbytes, -v) unlimited
+file locks                          (-x) unlimited
+
+Max open file descriptors (ulimit -n): 10240
+Explanation: ulimit -a displays all resource limits for the current shell session, including max open files (-n = 10240), max user processes (-u = 30307), stack size, and core file size. These limits prevent a single process or user from exhausting system resources like file descriptors or memory.
+
+=== 5. Conclusions Drawn From the Experiment ===
+Explanation: This experiment demonstrates Linux's 'everything is a file' philosophy in practice. Every process, including our shell, has a table of file descriptors (visible via /proc/$$/fd) that includes not just regular files but also device files like the terminal (/dev/pts/0). Standard input, output, and error are simply file descriptors 0, 1, and 2 that can be freely redirected to any file using >, 2>, and 2>&1, enabling powerful shell scripting and logging capabilities. Additionally, the OS enforces resource limits (ulimit) on how many files a process can have open simultaneously, preventing resource exhaustion. Together, lsof, /proc/PID/fd, redirection operators, and ulimit provide a complete picture of how Linux manages I/O at the process level.

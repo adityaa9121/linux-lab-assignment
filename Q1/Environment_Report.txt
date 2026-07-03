@@ -1,0 +1,35 @@
+
+=== 1. Username and Groups ===
+aditya
+aditya adm cdrom sudo dip plugdev users
+uid=1000(aditya) gid=1000(aditya) groups=1000(aditya),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users)
+Explanation: whoami displayed my username (aditya). groups and id showed I belong to several groups including sudo (admin privileges), adm (log access), and plugdev/cdrom/dip (hardware-related groups), along with my UID (1000) and GID (1000).
+
+=== 2. Current Shell ===
+/bin/bash
+    PID TTY          TIME CMD
+    597 pts/0    00:00:00 bash
+Explanation: echo $SHELL showed my default login shell is /bin/bash. ps -p $$ confirmed the shell currently executing my commands is bash.
+
+=== 3. Current Working Directory ===
+/home/aditya/lab-assignment/Question1
+Explanation: pwd printed the absolute path of my current working directory, confirming I'm inside /home/aditya/lab-assignment/Question1.
+
+=== 4. Files and Directories in Workspace ===
+total 12
+drwxr-xr-x 2 aditya aditya 4096 Jul  3 14:35 .
+drwxr-xr-x 3 aditya aditya 4096 Jul  3 14:25 ..
+-rw-r--r-- 1 aditya aditya  928 Jul  3 14:35 Environment_Report.txt
+Explanation: ls -la listed all files and directories including hidden ones. The workspace currently contains only . and .. since no files have been created yet.
+
+=== 5. Network Connectivity Verification ===
+PING google.com (142.250.66.14) 56(84) bytes of data.
+64 bytes from bom07s35-in-f14.1e100.net (142.250.66.14): icmp_seq=1 ttl=117 time=17.6 ms
+64 bytes from bom07s35-in-f14.1e100.net (142.250.66.14): icmp_seq=2 ttl=117 time=17.5 ms
+64 bytes from bom07s35-in-f14.1e100.net (142.250.66.14): icmp_seq=3 ttl=117 time=17.5 ms
+64 bytes from bom07s35-in-f14.1e100.net (142.250.66.14): icmp_seq=4 ttl=117 time=17.2 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 17.210/17.449/17.601/0.147 ms
+Explanation: ping -c 4 google.com sent four ICMP packets to Google's server and received all replies with 0% packet loss, confirming working internet/network connectivity.

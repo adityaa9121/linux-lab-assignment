@@ -1,0 +1,44 @@
+$ mkdir -p ~/lab-assignment/Question2
+$ cd ~/lab-assignment/Question2
+
+$ umask
+0022
+
+$ mkdir -p ProjectAlpha/{docs,scripts,data,logs}
+$ ls -R ProjectAlpha
+ProjectAlpha:
+data  docs  logs  scripts
+
+ProjectAlpha/data:
+
+ProjectAlpha/docs:
+
+ProjectAlpha/logs:
+
+ProjectAlpha/scripts:
+
+$ touch ProjectAlpha/docs/project_plan.txt
+$ ls -l ProjectAlpha/docs/project_plan.txt
+-rw-r--r-- 1 aditya aditya 0 Jul  3 14:59 ProjectAlpha/docs/project_plan.txt
+
+$ chmod 700 ProjectAlpha/docs/project_plan.txt
+$ ls -l ProjectAlpha/docs/project_plan.txt
+-rwx------ 1 aditya aditya 0 Jul  3 14:59 ProjectAlpha/docs/project_plan.txt
+
+$ ls -l ProjectAlpha/docs/project_plan.txt
+-rwx------ 1 aditya aditya 0 Jul  3 14:59 ProjectAlpha/docs/project_plan.txt
+
+$ stat ProjectAlpha/docs/project_plan.txt
+  File: ProjectAlpha/docs/project_plan.txt
+  Size: 0             Blocks: 0          IO Block: 4096   regular empty file
+Device: 8,48    Inode: 44940       Links: 1
+Access: (0700/-rwx------)  Uid: ( 1000/  aditya)   Gid: ( 1000/  aditya)
+Access: 2026-07-03 14:59:00.543317586 +0000
+Modify: 2026-07-03 14:59:00.543317586 +0000
+Change: 2026-07-03 14:59:20.715317013 +0000
+Birth: 2026-07-03 14:59:00.543317586 +0000
+
+$ touch ProjectAlpha/scripts/deploy.sh
+$ chmod 750 ProjectAlpha/scripts/deploy.sh
+$ ls -l ProjectAlpha/scripts/deploy.sh
+-rwxr-x--- 1 aditya aditya 0 Jul  3 15:00 ProjectAlpha/scripts/deploy.sh
