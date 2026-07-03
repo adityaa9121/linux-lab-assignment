@@ -1,0 +1,46 @@
+=== 1. Directory Structure Created ===
+ProjectAlpha:
+data
+docs
+logs
+scripts
+
+ProjectAlpha/data:
+
+ProjectAlpha/docs:
+project_plan.txt
+
+ProjectAlpha/logs:
+
+ProjectAlpha/scripts:
+deploy.sh
+Explanation: Created a project directory ProjectAlpha with four subdirectories (docs, scripts, data, logs) using mkdir -p, organizing the workspace by function - documentation, scripts, data files, and logs.
+
+=== 2. File Permissions Before and After Modification ===
+--- project_plan.txt BEFORE chmod ---
+-rw-r--r-- 1 aditya aditya 0 Jul 3 14:59 ProjectAlpha/docs/project_plan.txt
+--- project_plan.txt AFTER chmod 700 ---
+-rwx------ 1 aditya aditya 0 Jul  3 14:59 ProjectAlpha/docs/project_plan.txt
+Explanation: The file was initially created with default permissions 644 (rw-r--r--) based on the system umask. After running chmod 700, permissions changed to rwx------, restricting all access to the owner only and removing read access for group and others.
+
+--- deploy.sh AFTER chmod 750 ---
+-rwxr-x--- 1 aditya aditya 0 Jul  3 15:00 ProjectAlpha/scripts/deploy.sh
+Explanation: deploy.sh was set to 750 (rwxr-x---), giving the owner full control while allowing group members to read and execute the script without being able to modify it - appropriate for a shared but access-controlled script.
+
+=== 3. Ownership Details ===
+  File: ProjectAlpha/docs/project_plan.txt
+  size: 0         	Blocks: 0          IO Block: 4096   regular empty file
+Device: 8,48	Inode: 44940       Links: 1
+Access: (0700/-rwx------)  Uid: ( 1000/  aditya)   Gid: ( 1000/  aditya)
+Access: 2026-07-03 14:59:00.543317586 +0000
+Modify: 2026-07-03 14:59:00.543317586 +0000
+Change: 2026-07-03 14:59:20.715317013 +0000
+ Birth: 2026-07-03 14:59:00.543317586 +0000
+Explanation: stat confirmed aditya as both the owner (Uid 1000) and group (Gid 1000) of the file, along with inode number, permission bits, and timestamps for creation, access, and modification.
+
+=== 4. Umask Value Used ===
+0022
+Explanation: The umask value was 0022, meaning new files are created with 644 permissions (rw-r--r--) and new directories with 755 permissions (rwxr-xr-x) by default, subtracting write access for group and others.
+
+=== 5. How Permissions Protect Project Data ===
+Explanation: File permissions control who can read, write, or execute a file, limiting access based on ownership (owner/group/others). By setting stricter permissions like 700 on sensitive files (e.g., project_plan.txt), only the file owner can access it, preventing unauthorized users from viewing or editing confidential project data. Similarly, 750 on scripts allows trusted group members to run them without being able to modify the script, reducing the risk of accidental or malicious changes. This layered access control is fundamental to Linux security, ensuring that only authorized users can perform specific actions on files based on their role.

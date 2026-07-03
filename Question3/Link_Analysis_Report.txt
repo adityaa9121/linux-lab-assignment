@@ -1,0 +1,41 @@
+=== 1. Inode Numbers of All Files ===
+original.txt (before deletion): inode 44929
+hardlink.txt: inode 44929 (same as original)
+symlink.txt: inode 44943 (different - separate file)
+Explanation: ls -li showed hardlink.txt shares the exact same inode number as original.txt, confirming they are two names pointing to the same underlying data. symlink.txt has its own distinct inode, since it is a separate file that only stores a path reference.
+
+=== 2. Comparison Between Hard Link and Symbolic Link ===
+Hard Link (hardlink.txt): Same inode as original, link count increases, same size/permissions, breaks only if ALL hard links are removed, cannot cross filesystems, cannot link directories.
+Symbolic Link (symlink.txt): Different inode, own small size (just the path string), permissions always 777 (lrwxrwxrwx), becomes 'dangling'/broken if target is removed, can cross filesystems, can link directories.
+Explanation: The key difference is that hard links reference the same data on disk (same inode), making them resilient to the original filename being deleted, whereas symbolic links merely store a path to the target file and break if that path becomes invalid.
+
+=== 3. Effect of Deleting the Original File ===
+rm: cannot remove 'original.txt': No such file or directory
+44929 -rw-r--r-- 1 aditya aditya 35 Jul  3 15:08 hardlink.txt
+44943 lrwxrwxrwx 1 aditya aditya 12 Jul  3 15:07 symlink.txt -> original.txt
+--- Attempting to read hardlink.txt ---
+This is the original project file.
+--- Attempting to read symlink.txt ---
+Explanation: After deleting original.txt, hardlink.txt still worked and displayed the original content because it shares the same inode (44929) as the original - the data is only truly deleted when its link count reaches zero. symlink.txt broke and returned 'No such file or directory' since it only stored a path reference to original.txt, which no longer exists.
+
+=== 4. Metadata Collected Using Linux Utilities ===
+  File: hardlink.txt
+  size: 35        	Blocks: 8          IO Block: 4096   regular file
+Device: 8,48	Inode: 44929       Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/  aditya)   Gid: ( 1000/  aditya)
+Access: 2026-07-03 15:09:52.771296972 +0000
+Modify: 2026-07-03 15:08:46.967297952 +0000
+Change: 2026-07-03 15:09:52.731296972 +0000
+ Birth: 2026-07-03 15:06:24.011301609 +0000
+  File: 'symlink.txt' -> 'original.txt'
+  size: 12        	Blocks: 0          IO Block: 4096   symbolic link
+Device: 8,48	Inode: 44943       Links: 1
+Access: (0777/lrwxrwxrwx)  Uid: ( 1000/  aditya)   Gid: ( 1000/  aditya)
+Access: 2026-07-03 15:07:31.155300507 +0000
+Modify: 2026-07-03 15:07:31.143300507 +0000
+Change: 2026-07-03 15:07:31.143300507 +0000
+ Birth: 2026-07-03 15:07:31.143300507 +0000
+Explanation: stat provided detailed metadata including inode numbers, link counts, permissions, size, and timestamps, clearly distinguishing the hard link (regular file, same inode as original) from the symbolic link (type 'symbolic link', its own inode, small size representing only the stored path).
+
+=== 5. Conclusions Drawn From the Experiment ===
+Explanation: This experiment demonstrates that hard links and symbolic links behave fundamentally differently in Linux. Hard links are additional names for the same inode/data, making them robust against the original filename being deleted, but they cannot span filesystems or link directories. Symbolic links are independent files that store a path to a target, offering flexibility (can link directories, cross filesystems) but at the cost of breaking if the target is moved or deleted. Understanding this distinction is critical for data recovery scenarios, backup strategies, and safely managing files in a Linux environment.

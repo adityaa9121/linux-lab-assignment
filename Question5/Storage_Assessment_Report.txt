@@ -1,0 +1,41 @@
+=== Storage Health Assessment Report ===
+
+1. Available Storage Devices (lsblk)
+sda   356.9M  disk
+sdb   159.4M  disk
+sdc   2G      disk [SWAP]
+sdd   1T      disk  -> mounted at / and /mnt/wslg/distro
+
+2. Mounted File Systems (df -hT)
+/dev/sdd   ext4   1007G  1.3G used  955G avail  1% used  mounted on /
+C:\        9p     476G   127G used  350G avail  27% used  mounted on /mnt/c
+Several tmpfs/overlay mounts for WSL internals (/run, /tmp, /init, etc.)
+
+3. Disk Usage Statistics (df -h, du -sh)
+Root filesystem (/dev/sdd): 1.3G used of 1007G (1% used)
+Windows C: drive (via 9p): 127G used of 476G (27% used)
+~/lab-assignment folder size: 80K
+
+4. Inode Utilization (df -i)
+/dev/sdd: 67,108,864 total inodes, 44,963 used (1%), 67,063,901 free
+C:\ and drivers (9p filesystem): report -999001 used inodes, a known
+quirk since 9p bridges to NTFS and does not track native Linux inodes.
+
+5. Storage Health Observations
+- The Linux root filesystem (/dev/sdd) is extremely healthy: only 1%
+  space used and 1% inode usage, with 955G free.
+- The Windows C: drive is more utilized at 27%, but still has 350G free.
+- No filesystem is near capacity for either space or inodes.
+- The 9p-mounted Windows drive does not report standard inode stats,
+  which is expected behavior for this filesystem type in WSL.
+
+6. Recommendations for Improving Storage Utilization
+- Monitor the C: drive (27% used) periodically since it holds the bulk
+  of used space; consider cleanup of temporary/cache files if usage grows.
+- Continue using the ext4 root filesystem for Linux workloads, as it
+  has abundant space and inode headroom.
+- Set up periodic monitoring (e.g., a cron job running df -h and df -i)
+  to catch storage or inode exhaustion early, especially before deploying
+  a new application server that may generate large volumes of files/logs.
+- Avoid storing large numbers of very small files where possible, since
+  inode exhaustion (not just space) can also cause failures.
