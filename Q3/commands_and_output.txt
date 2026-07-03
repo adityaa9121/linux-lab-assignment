@@ -1,1 +1,66 @@
+$ mkdir -p ~/lab-assignment/Question3
+$ cd ~/lab-assignment/Question3
 
+$ echo "This is the original project file." > original.txt
+$ cat original.txt
+This is the original project file.
+
+$ ls -li original.txt
+44929 -rw-r--r-- 1 aditya aditya 35 Jul  3 15:06 original.txt
+
+$ ln original.txt hardlink.txt
+$ ls -li original.txt hardlink.txt
+44929 -rw-r--r-- 2 aditya aditya 35 Jul  3 15:06 hardlink.txt
+44929 -rw-r--r-- 2 aditya aditya 35 Jul  3 15:06 original.txt
+
+$ ln -s original.txt symlink.txt
+$ ls -li original.txt hardlink.txt symlink.txt
+44929 -rw-r--r-- 2 aditya aditya 35 Jul  3 15:06 hardlink.txt
+44929 -rw-r--r-- 2 aditya aditya 35 Jul  3 15:06 original.txt
+44943 lrwxrwxrwx 1 aditya aditya 12 Jul  3 15:07 symlink.txt -> original.txt
+
+$ ls -l original.txt hardlink.txt symlink.txt
+-rw-r--r-- 2 aditya aditya 35 Jul  3 15:08 hardlink.txt
+-rw-r--r-- 2 aditya aditya 35 Jul  3 15:08 original.txt
+lrwxrwxrwx 1 aditya aditya 12 Jul  3 15:07 symlink.txt -> original.txt
+
+$ stat original.txt
+  File: original.txt
+  Size: 35              Blocks: 8          IO Block: 4096   regular file
+Device: 8,48    Inode: 44929      Links: 2
+Access: (0644/-rw-r--r--)  Uid: ( 1000/aditya)   Gid: ( 1000/aditya)
+Access: 2026-07-03 15:08:46.979297953 +0000
+Modify: 2026-07-03 15:08:46.967297952 +0000
+Change: 2026-07-03 15:08:46.967297952 +0000
+Birth: 2026-07-03 15:06:24.011301609 +0000
+
+$ stat hardlink.txt
+  File: hardlink.txt
+  Size: 35              Blocks: 8          IO Block: 4096   regular file
+Device: 8,48    Inode: 44929      Links: 2
+Access: (0644/-rw-r--r--)  Uid: ( 1000/aditya)   Gid: ( 1000/aditya)
+Access: 2026-07-03 15:08:46.979297953 +0000
+Modify: 2026-07-03 15:08:46.967297952 +0000
+Change: 2026-07-03 15:08:46.967297952 +0000
+Birth: 2026-07-03 15:06:24.011301609 +0000
+
+$ stat symlink.txt
+  File: 'symlink.txt' -> 'original.txt'
+  Size: 12              Blocks: 0          IO Block: 4096   symbolic link
+Device: 8,48    Inode: 44943      Links: 1
+Access: (0777/lrwxrwxrwx)  Uid: ( 1000/aditya)   Gid: ( 1000/aditya)
+Access: 2026-07-03 15:07:31.155300507 +0000
+Modify: 2026-07-03 15:07:31.143300507 +0000
+Change: 2026-07-03 15:07:31.143300507 +0000
+Birth: 2026-07-03 15:07:31.143300507 +0000
+
+$ rm original.txt
+$ ls -li hardlink.txt symlink.txt
+44929 -rw-r--r-- 1 aditya aditya 35 Jul  3 15:08 hardlink.txt
+44943 lrwxrwxrwx 1 aditya aditya 12 Jul  3 15:07 symlink.txt -> original.txt
+
+$ cat hardlink.txt
+This is the original project file.
+
+$ cat symlink.txt
+cat: symlink.txt: No such file or directory
